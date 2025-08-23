@@ -12,3 +12,12 @@ def test_end_to_end(tart_ms_tarfile, sky_model):
       ms=tart_ms_tarfile,
       sky_model=sky_model,
     )
+
+def test_end_to_end_withcunks(tart_ms_tarfile, sky_model):
+  with patch.object(sys, "argv", ["crystalball", "--sky-model", sky_model, tart_ms_tarfile]):
+    predict(
+      ms=tart_ms_tarfile,
+      sky_model=sky_model,
+      model_chunks=5,
+      row_chunks=4,
+    )

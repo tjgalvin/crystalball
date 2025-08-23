@@ -271,7 +271,7 @@ def create_predict_graph(
         compute=False
     )
     if client is None:
-        tables = Client().compute(tables, , optimize_graph=False).result()
+        tables = Client().compute(tables, optimize_graph=False).result()
     else:
         tables = client.compute(tables, optimize_graph=False).result()
 

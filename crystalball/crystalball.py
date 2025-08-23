@@ -271,7 +271,7 @@ def create_predict_graph(
         compute=False
     )
     if client is None:
-        tables = Client().compute(tables, optimize_graph=False).result()
+        tables = Client().compute(tables, optimize_graph=False, priority=999).result()
     else:
         tables = client.compute(tables, optimize_graph=False).result()
 
@@ -400,7 +400,7 @@ def predict(
 
         # Submit all graph computations in parallel
         if client is not None:
-            future_list = client.compute(writes)
+            future_list = client.compute(writes, optimize_graph=False)
             progress(future_list)
         else:
             dask.compute(writes)

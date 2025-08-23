@@ -271,7 +271,7 @@ def create_predict_graph(
         compute=False
     )
     if client is None:
-        tables = Client()compute(s=tables)
+        tables = Client().compute(s=tables)
     else:
         tables = client.compute(tables)
 
@@ -386,6 +386,7 @@ def predict(
         field=field,
         row_chunks=row_chunks,
         model_chunks=model_chunks,
+        client=client
     )
 
     tick = time()

@@ -268,13 +268,9 @@ def create_predict_graph(
     tables = support_tables(
         ms=ms, 
         tables=["FIELD", "DATA_DESCRIPTION", "SPECTRAL_WINDOW", "POLARIZATION"],
-        compute=False
+        compute=True
     )
-    if client is None:
-        tables = Client().compute(tables, optimize_graph=False, priority=999).result()
-    else:
-        tables = client.compute(tables, optimize_graph=False).result()
-
+    
     field_ds = tables["FIELD"]
     ddid_ds = tables["DATA_DESCRIPTION"]
     spw_ds = tables["SPECTRAL_WINDOW"]

@@ -271,9 +271,9 @@ def create_predict_graph(
         compute=False
     )
     if client is None:
-        tables = Client().compute(s=tables)
+        tables = Client().compute(tables, , optimize_graph=False).result()
     else:
-        tables = client.compute(tables).result()
+        tables = client.compute(tables, optimize_graph=False).result()
 
     field_ds = tables["FIELD"]
     ddid_ds = tables["DATA_DESCRIPTION"]

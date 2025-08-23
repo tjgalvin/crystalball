@@ -49,7 +49,7 @@ def support_tables(ms: str, tables: list[str], compute: bool=True) -> dict[str, 
     def _loader(dataset: Any) -> Any:
         """Tricksey trick"""
         if compute:
-            return dataset.comput()
+            return dataset.compute()
         return dataset
     
     return {t: [
@@ -226,8 +226,6 @@ def compute_chunk_sizes(
         nr_corrs=max_num_corr, 
         data_type=ms_datatype, 
         num_workers=num_workers,
-        model_chunks=model_chunks,
-        row_chunks=row_chunks,
         memory_fraction=memory_fraction,
         client=client,
     )
@@ -241,7 +239,6 @@ def create_predict_graph(
         field: str | None = None,
         row_chunks: int = 0,
         model_chunks: int = 0,
-        within: str | None = None,
 ) -> list[dataset.Dataset]:
     """Create the dask work graph for execution
 
@@ -371,7 +368,7 @@ def predict(
         output_column=output_column
     )
 
-    if row_chunks is None and model_chunks is None:
+    if row_chunks == 0 and model_chunks == 0:
         row_chunks, model_chunks = compute_chunk_sizes(
             ms=ms, source_model_xds=source_model, num_workers=num_workers, ms_rows=ms_rows,
             memory_fraction=memory_fraction, ms_datatype=ms_datatype, client=client
@@ -384,12 +381,6 @@ def predict(
         field=field,
         row_chunks=row_chunks,
         model_chunks=model_chunks,
-        within=within,
-        points_only=points_only,
-        num_sources=num_sources,
-        num_workers=num_workers,
-        memory_fraction=memory_fraction,
-        client=client
     )
 
     tick = time()

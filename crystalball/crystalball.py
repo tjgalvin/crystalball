@@ -273,7 +273,7 @@ def create_predict_graph(
     if client is None:
         tables = Client().compute(s=tables)
     else:
-        tables = client.compute(tables)
+        tables = client.compute(tables).result()
 
     field_ds = tables["FIELD"]
     ddid_ds = tables["DATA_DESCRIPTION"]

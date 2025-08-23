@@ -239,6 +239,7 @@ def create_predict_graph(
         field: str | None = None,
         row_chunks: int = 0,
         model_chunks: int = 0,
+        client: Client = None
 ) -> list[dataset.Dataset]:
     """Create the dask work graph for execution
 
@@ -269,6 +270,10 @@ def create_predict_graph(
         tables=["FIELD", "DATA_DESCRIPTION", "SPECTRAL_WINDOW", "POLARIZATION"],
         compute=False
     )
+    if client is None:
+        tables = Client()compute(s=tables)
+    else:
+        tables = client.compute(tables)
 
     field_ds = tables["FIELD"]
     ddid_ds = tables["DATA_DESCRIPTION"]

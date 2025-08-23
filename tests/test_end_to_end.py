@@ -14,6 +14,7 @@ def test_end_to_end(tart_ms_tarfile, sky_model):
     )
 
 def test_end_to_end_withcunks(tart_ms_tarfile, sky_model):
+  """Same test as above but should bypass the get budget stage"""
   with patch.object(sys, "argv", ["crystalball", "--sky-model", sky_model, tart_ms_tarfile]):
     predict(
       ms=tart_ms_tarfile,

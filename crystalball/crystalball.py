@@ -279,9 +279,9 @@ def create_predict_graph(
     tables = support_tables(
         ms=ms, 
         tables=["FIELD", "DATA_DESCRIPTION", "SPECTRAL_WINDOW", "POLARIZATION"],
-        compute=True
-    )
-    
+        compute=False
+    ).compute(priority=9999)
+
     field_ds = tables["FIELD"]
     ddid_ds = tables["DATA_DESCRIPTION"]
     spw_ds = tables["SPECTRAL_WINDOW"]

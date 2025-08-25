@@ -101,7 +101,7 @@ def fill_correlations(vis, pol):
         return vis.rechunk({2: corrs})
     elif corrs == 4:
         zeros = da.zeros_like(vis)
-        vis = da.concatenate([vis.MODEL_DATA.data, zeros, zeros, vis.MOEL_DATA.data], axis=2)
+        vis = da.concatenate([vis, zeros, zeros, vis], axis=2)
         return vis.rechunk({2: corrs})
     else:
         raise ValueError("MS Correlations %d not in (1, 2, 4)" % corrs)
@@ -279,7 +279,7 @@ def create_predict_graph(
     tables = support_tables(
         ms=ms, 
         tables=["FIELD", "DATA_DESCRIPTION", "SPECTRAL_WINDOW", "POLARIZATION"],
-        compute=False
+        compute=True
     )
     
     field_ds = tables["FIELD"]

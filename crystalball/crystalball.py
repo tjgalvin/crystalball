@@ -59,6 +59,7 @@ def support_tables(ms: str, tables: list[str], compute: bool=True) -> dict[str, 
                 )
         open_tables[t] = [_loader(ds) for ds in dataset]
     
+    log.info(f"{len(tables)} loaded with {compute=}")
     return open_tables
     
     # return {t: [

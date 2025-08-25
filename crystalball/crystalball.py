@@ -50,16 +50,16 @@ def support_tables(ms: str, tables: list[str], compute: bool=True) -> dict[str, 
             return dataset.compute(priority=9999)
         return dataset
     
-    tables = {}
+    open_tables = {}
     for t in tables:
         log.info(f"Loading {t=}")
         dataset = xds_from_table(
                     "::".join((ms, t)),
                     group_cols="__row__"
                 )
-        tables[t] = [_loader(ds) for ds in dataset]
+        open_tables[t] = [_loader(ds) for ds in dataset]
     
-    return tables
+    return open_tables
     
     # return {t: [
     #     _loader(ds) 

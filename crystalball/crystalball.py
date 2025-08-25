@@ -298,6 +298,7 @@ def create_predict_graph(
 
     field_id = select_field_id(field_ds, field)
 
+    log.info(f"The {field_id=}")
     for xds in filter_datasets(datasets, field_id):
         # Extract frequencies from the spectral window associated
         # with this data descriptor id
@@ -335,12 +336,15 @@ def create_predict_graph(
 
         # Assign visibilities to MODEL_DATA array on the dataset
         xds = xds.assign(
-            **{output_column: (("row", "chan", "corr"), vis)})
+            **{output_column: (("row", "chan", "corr"), vis)}
+        )
         # Create a write to the table
+        log.info("Creating writes object")
         write = xds_to_table(xds, ms, [output_column])
         # Add to the list of writes
         writes.append(write)
 
+    log.info("Work graphy constructed!")
     return writes
 
 def predict(
@@ -407,6 +411,7 @@ def predict(
 
         # Submit all graph computations in parallel
         if client is not None:
+            log.info("Starting executions")
             future_list = client.compute(writes, optimize_graph=False)
             progress(future_list)
         else:

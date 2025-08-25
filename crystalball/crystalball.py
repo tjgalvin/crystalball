@@ -10,7 +10,7 @@ import warnings
 from contextlib import ExitStack
 from importlib.metadata import version
 from time import time
-from typing import Literal
+from typing import Literal, Any
 
 import dask
 import dask.array as da
@@ -32,8 +32,6 @@ from crystalball.region import load_regions
 from crystalball.wsclean import WSCleanModel, import_from_wsclean
 
 
-
-from typing import Any
 def support_tables(ms: str, tables: list[str], compute: bool=True) -> dict[str, Any]:
     """Load in the measurement set tables as xarray DataSets
 
@@ -45,21 +43,32 @@ def support_tables(ms: str, tables: list[str], compute: bool=True) -> dict[str, 
     Returns:
         dict[str, Any]: The set of tables, where the key is their name and value is the xrray dataset
     """
-    
+    log.info("Loading the support tabls")
     def _loader(dataset: Any) -> Any:
         """Tricksey trick"""
         if compute:
             return dataset.compute(priority=9999)
         return dataset
     
-    return {t: [
-        _loader(ds) 
-        for ds in xds_from_table(
+    tables = {}
+    for t in tables:
+        log.info(f"Loading {t=}")
+        dataset = xds_from_table(
                     "::".join((ms, t)),
-                    group_cols="__row__")
-        ]
-        for t in tables
-    }
+                    group_cols="__row__"
+                )
+        tables[t] = [_loader(ds) for ds in dataset]
+    
+    return tables
+    
+    # return {t: [
+    #     _loader(ds) 
+    #     for ds in xds_from_table(
+    #                 "::".join((ms, t)),
+    #                 group_cols="__row__")
+    #     ]
+    #     for t in tables
+    # }
 
 
 def fill_correlations(vis, pol):
@@ -263,6 +272,7 @@ def create_predict_graph(
                 source_model
             )
     
+    log.info("Converting source model to dask arrays")
     source_model = source_model_to_dask(source_model, model_chunks)
 
     tables = support_tables(
@@ -356,6 +366,7 @@ def predict(
 
     # Import source data from WSClean component list
     # See https://wsclean.readthedocs.io/en/latest/component_list.html
+    log.info(f"Loading in {sky_model=}")
     source_model = import_from_wsclean(
         sky_model,
         include_regions=include_regions,

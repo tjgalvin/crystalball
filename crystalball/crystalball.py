@@ -49,7 +49,7 @@ def support_tables(ms: str, tables: list[str], compute: bool=True) -> dict[str, 
     def _loader(dataset: Any) -> Any:
         """Tricksey trick"""
         if compute:
-            return dataset.compute()
+            return dataset.compute(priority=9999)
         return dataset
     
     return {t: [

@@ -281,8 +281,6 @@ def create_predict_graph(
         tables=["FIELD", "DATA_DESCRIPTION", "SPECTRAL_WINDOW", "POLARIZATION"],
         compute=False
     )
-    tables = dask.compute(tables, priority=999)
-    log.info(f"{tables=}")
     
     field_ds = tables["FIELD"]
     ddid_ds = tables["DATA_DESCRIPTION"]
